@@ -20,6 +20,7 @@ use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\ArrayData;
@@ -342,6 +343,16 @@ class ViewableDataObject extends DataExtension
         return $template->process($this->owner->customise(new ArrayData(array(
             'Pages' => new ArrayList(array_reverse($pages)),
         ))));
+    }
+
+    /**
+     * @param \SilverStripe\ORM\ValidationResult &$validationResult
+     */
+    public function validate(ValidationResult $validationResult)
+    {
+        if (!$this->owner->Title) {
+            $validationResult->addFieldError('Title', 'Title is required');
+        }
     }
 
     /**
